@@ -1,0 +1,30 @@
+# 依存・ビルド
+node_modules/
+dist/
+build/
+coverage/
+
+# Cloudflare
+.wrangler/
+.dev.vars
+.dev.vars.*
+
+# 秘匿情報
+.env
+.env.*
+*.pem
+*.key
+# 署名鍵・TURN 認証情報の保存先 (例: turn_credentials.json)
+
+# ログ・一時
+*.log
+npm-debug.log*
+.cache/
+tmp/
+
+# OS・エディタ
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+# 共有したい設定のみ例外で追跡 (必要に応じて追加)
