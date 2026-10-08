@@ -4,14 +4,13 @@ compatibility_date = "2024-08-01"
 
 [vars]
 # Placeholder for any vars
-
-[durable_objects]
-binding = "VONUM_DO"
-class_name = "VonumDO"
-
-[vars]
 # For turn secret (set via wrangler secret later)
 TURN_SECRET = ""
 
-[obs]
-# Optional
+[[durable_objects.bindings]]
+name = "VONUM_DO"
+class_name = "VonumDO"
+
+[exports.VonumDO]
+type = "durable-object"
+storage = "sqlite"
