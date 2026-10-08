@@ -1,0 +1,20 @@
+<!DOCTYPE lang="en">
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Vonum Client</title>
+</head>
+<body data-worker-url="http://127.0.0.1:8787">
+  <h1>Vonum WebRTC Phone</h1>
+  <div>
+    <label for="number-input">Target Number:</label>
+    <input id="number-input" type="text" placeholder="e.g., 123456" />
+  </div>
+  <div>
+    <button id="call-btn">Call</button>
+    <button id="hangup-btn" disabled>Hangup</button>
+  </div>
+  <div id="status"></div>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
