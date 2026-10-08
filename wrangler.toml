@@ -14,3 +14,7 @@ class_name = "VonumDO"
 [exports.VonumDO]
 type = "durable-object"
 storage = "sqlite"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["VonumDO"]
