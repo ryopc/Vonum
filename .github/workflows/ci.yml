@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [ main, master ]
 
+# 👇 すべてのジョブを worker フォルダ内で実行するように指定
+defaults:
+  run:
+    working-directory: ./worker
+
 jobs:
   # Lint and format check
   lint:
@@ -15,7 +20,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
-      - run: npm install          
+      # 💡 重複していた npm install は削除し、高速な npm ci のみに統一しました
       - run: npm ci
       - name: Install ESLint and Prettier (if not present)
         run: npm install --save-dev eslint prettier eslint-plugin-import
@@ -53,7 +58,7 @@ jobs:
   # License check
   license-check:
     runs-on: ubuntu-latest
-    needs: [lint, test, build]  # optional: run after those succeed
+    needs: [lint, test, build]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -70,12 +75,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: third-party-notices
-          path: THIRD-PARTY-NOTICES.txt
+          path: worker/THIRD-PARTY-NOTICES.txt # 💡 アップロード対象のパスを調整
 
   # Vulnerability check
   vulnerability-check:
     runs-on: ubuntu-latest
-    needs: [license-check]  # run after license check
+    needs: [license-check]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -94,4 +99,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: npm-audit-report
-          path: audit-report.json
+          path: worker/audit-report.json # 💡 アップロード対象のパスを調整
