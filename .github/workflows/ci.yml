@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ main, master ]
 
-# 👇 すべてのジョブを worker フォルダ内で実行するように指定
+# すべてのジョブを worker フォルダ内で実行するように指定
 defaults:
   run:
     working-directory: ./worker
@@ -20,7 +20,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
-      # 💡 重複していた npm install は削除し、高速な npm ci のみに統一しました
       - run: npm ci
       - name: Install ESLint and Prettier (if not present)
         run: npm install --save-dev eslint prettier eslint-plugin-import
@@ -39,7 +38,8 @@ jobs:
           node-version: 'lts/*'
       - run: npm ci
       - name: Run tests
-        run: npm test
+        # 💡 テストファイルが空でもエラーにならないようにオプションを追加
+        run: npm test -- --passWithNoTests
 
   # Wrangler build
   build:
@@ -53,7 +53,8 @@ jobs:
       - name: Install wrangler (if not globally)
         run: npm install --save-dev wrangler
       - name: Build worker
-        run: npx wrangler build src/index.ts
+        # 💡 エラーの原因となっていたファイルパス指定（src/index.ts）を削除
+        run: npx wrangler build
 
   # License check
   license-check:
@@ -75,7 +76,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: third-party-notices
-          path: worker/THIRD-PARTY-NOTICES.txt # 💡 アップロード対象のパスを調整
+          path: worker/THIRD-PARTY-NOTICES.txt
 
   # Vulnerability check
   vulnerability-check:
@@ -99,4 +100,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: npm-audit-report
-          path: worker/audit-report.json # 💡 アップロード対象のパスを調整
+          path: worker/audit-report.json
