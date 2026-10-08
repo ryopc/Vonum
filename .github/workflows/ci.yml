@@ -15,6 +15,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
+      - run: npm install          
       - run: npm ci
       - name: Install ESLint and Prettier (if not present)
         run: npm install --save-dev eslint prettier eslint-plugin-import
