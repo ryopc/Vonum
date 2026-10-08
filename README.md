@@ -119,5 +119,5 @@ Make sure to set the `TURN_SECRET` variable via `wrangler secret` if needed.
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the Apache License, Version 2.0.
 
