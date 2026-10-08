@@ -1,47 +1,12 @@
-import { DurableObject, DurableObjectNamespace } from 'cloudflare:workers';
+import { VonumDO } from './VonumDO';
 
-interface RegistryEnv {
-  TURN_SECRET: string;
-  VONUM_DO: DurableObjectNamespace<VonumDO>;
-}
+import { verifySignature } from './lib/verifySignature';
+
+export { VonumDO, verifySignature };
 
 // Global maps to store active connections (shared across all WebSocket upgrades)
 const connections = new Map<string, WebSocket>(); // number -> WebSocket
 const reverse = new Map<WebSocket, string>(); // WebSocket -> number
-
-class VonumDO extends DurableObject<RegistryEnv> {
-  // registry: number => { publicKey, metadata }
-  private registry = new Map<string, {
-    publicKey: Uint8Array;
-    metadata?: unknown;
-  }>();
-
-  constructor(state: DurableObjectState, env: RegistryEnv) {
-    super(state, env);
-  }
-
-  // Register a number
-  async register(number: string, publicKey: Uint8Array, metadata?: unknown) {
-    this.registry.set(number, { publicKey, metadata });
-  }
-
-  // Get a number's public key and metadata
-  async get(number: string): Promise<{ publicKey: Uint8Array; metadata?: unknown } | undefined> {
-    return this.registry.get(number);
-  }
-
-  // HTTP fetch handler for the Durable Object (e.g., /turn-token)
-  async fetch(request: Request): Promise<Response> {
-    const url = new URL(request.url);
-    if (url.pathname === '/turn-token') {
-      // Dummy token for now
-      return new Response(JSON.stringify({ token: 'dummy-turn-token' }), {
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
-    return new Response('Vonum Worker OK', { status: 200 });
-  }
-}
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // Payload interfaces (not exported, just for clarity)
@@ -80,14 +45,6 @@ function base64UrlToBase64(str: string): string {
   return str.replace(/-/g, '+').replace(/_/g, '/');
 }
 
-// Placeholder signature verification (always true for now)
-/* eslint-disable @typescript-eslint/no-unused-vars */
-async function verifySignature(payload: unknown, sig: string, pubkey: Uint8Array): Promise<boolean> {
-  return true;
-}
-/* eslint-enable @typescript-eslint/no-unused-vars */
-
-export { VonumDO };
 export default {
   async fetch(
     request: Request,
@@ -135,7 +92,6 @@ export default {
           let publicKeyBuf: Uint8Array;
           try {
             const b64 = base64UrlToBase64(registerPayload.publicKey);
-            // atob expects proper padding; we can add padding if needed
             const padding = '='.repeat((4 - (b64.length % 4)) % 4);
             const b64Padded = b64 + padding;
             const binary = atob(b64Padded);
@@ -230,6 +186,7 @@ export default {
         webSocket: client,
       });
     }
+
     // Handle HTTP requests
     if (url.pathname === '/turn-token') {
       const id = env.VONUM_DO.idFromName('vonum');
