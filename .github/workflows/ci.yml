@@ -99,3 +99,21 @@ jobs:
         with:
           name: npm-audit-report
           path: worker/audit-report.json
+
+  auto-merge:
+    runs-on: ubuntu-latest
+    # テストジョブ（上記で指定した名前）が成功した場合のみ実行
+    needs: vulnerability-check
+    # フォーク元のPRではなく、自分のリポジトリ内のPRのみ対象（セキュリティ対策）
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    # PRを操作するために必要な権限を明示的に付与
+    permissions:
+      pull-requests: write
+      contents: write
+    steps:
+      - name: Automatically merge PR
+        run: |
+          gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
