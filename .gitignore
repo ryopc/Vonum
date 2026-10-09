@@ -29,3 +29,4 @@ Thumbs.db
 .vscode/
 # 共有したい設定のみ例外で追跡 (必要に応じて追加)
 !.env.example
+REPORT.md

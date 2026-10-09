@@ -44,7 +44,7 @@ describe('verifySignature', () => {
   });
 
   it('rejects a wrong signature', async () => {
-    const { privateKey, publicKey } = await crypto.subtle.generateKey(
+    const { _unused, publicKey } = await crypto.subtle.generateKey( // eslint-disable-line @typescript-eslint/no-unused-vars
       { name: 'Ed25519' },
       true,
       ['sign', 'verify']

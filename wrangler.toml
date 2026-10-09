@@ -1,5 +1,5 @@
 name = "vonum-worker"
-main = "src/index.ts"
+main = "worker/src/index.ts"
 compatibility_date = "2024-08-01"
 
 [vars]
@@ -10,10 +10,6 @@ TURN_SECRET = ""
 [[durable_objects.bindings]]
 name = "VONUM_DO"
 class_name = "VonumDO"
-
-[exports.VonumDO]
-type = "durable-object"
-storage = "sqlite"
 
 [[migrations]]
 tag = "v1"
