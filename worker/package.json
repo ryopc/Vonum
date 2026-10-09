@@ -8,8 +8,7 @@
     "test": "vitest",
     "lint": "eslint . --ext .js,.ts",
     "format": "prettier --write .",
-    "generate-notices": "license-checker-rseidelsohn --out THIRD-PARTY-NOTICES.txt",
-    "prepare": "husky install"
+    "generate-notices": "license-checker-rseidelsohn --out THIRD-PARTY-NOTICES.txt"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20261008.1",
