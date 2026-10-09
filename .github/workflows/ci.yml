@@ -50,10 +50,10 @@ jobs:
         with:
           node-version: 'lts/*'
       - run: npm ci
-      - name: Install wrangler (if not globally)
-        run: npm install --save-dev wrangler@4
-        # 💡 エラーの原因となっていたファイルパス指定（src/index.ts）を削除
-        run: npx wrangler deploy --dry-run --outdir=dist --config ../wrangler.toml
+      - name: Install wrangler and build worker
+        run: |
+          npm install --save-dev wrangler@4
+          npx wrangler deploy --dry-run --outdir=dist --config ../wrangler.toml
 
   # License check
   license-check:
