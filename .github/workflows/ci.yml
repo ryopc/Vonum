@@ -54,7 +54,7 @@ jobs:
         run: npm install --save-dev wrangler@4
       - name: Build worker
         # Use wrangler deploy dry-run to get built output without deploying
-        run: npx wrangler deploy --dry-run --outdir=dist --toml ../wrangler.toml
+        run: npx wrangler deploy --dry-run --outdir=dist --config ../wrangler.toml
 
   # License check
   license-check:
