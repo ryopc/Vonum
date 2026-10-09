@@ -71,7 +71,7 @@ jobs:
       - name: Generate Third Party Notices
         run: npx license-checker-rseidelsohn --unknown --out THIRD-PARTY-NOTICES.txt
       - name: Block Copyleft Licenses
-        run: npx license-checker-rseidelsohn --onlyAllow "MIT;Apache-2.0;BSD-2-Clause;BSD-3-Clause;ISC;Unlicense;CC0-1.0"
+        run: npx license-checker-rseidelsohn --onlyAllow "MIT;Apache-2.0;BSD-2-Clause;BSD-3-Clause;ISC;Unlicense;CC0-1.0;BSL-1.0;Zlib"
       - name: Upload License Notice
         uses: actions/upload-artifact@v4
         with:
