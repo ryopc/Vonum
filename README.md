@@ -2,6 +2,7 @@
 
 A Cloudflare Workers implementation for a decentralized identity registry using Durable Objects and WebSocket signaling.
 
+
 ## Features
 
 - WebSocket-based client registration and signaling
