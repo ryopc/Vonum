@@ -98,19 +98,26 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: npm-audit-report
-          path: worker/audit-report.json
-
+          path: worker/audit-report.json        
   auto-merge:
     runs-on: ubuntu-latest
-    # テストジョブ（上記で指定した名前）が成功した場合のみ実行
+    # 前のセキュリティチェックがすべて成功したら実行
     needs: vulnerability-check
-    # フォーク元のPRではなく、自分のリポジトリ内のPRのみ対象（セキュリティ対策）
-    if: github.event.pull_request.head.repo.full_name == github.repository
+    # プルリクエストイベント、かつ自分のリポジトリ内のPR（フォーク元不可）のときのみ実行
+    if: |
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository
     # PRを操作するために必要な権限を明示的に付与
     permissions:
       pull-requests: write
       contents: write
+    # ジョブ全体のデフォルト設定をルート（.）に上書きして初期化エラーを防ぐ
+    defaults:
+      run:
+        working-directory: .
     steps:
+      # ghコマンドを動かすために最小限のチェックアウトを行う
+      - uses: actions/checkout@v4
       - name: Automatically merge PR
         run: |
           gh pr merge --auto --squash "$PR_URL"
